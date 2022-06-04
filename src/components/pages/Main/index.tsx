@@ -15,6 +15,13 @@ export const Main = observer(
                 DifferencesStore.upload(e.target.files[0]);
             }
         };
+        const switchChecker = (rowIdx: number) => {
+            if (DifferencesStore.selectedRows.find((selectedRow) => selectedRow === rowIdx)) {
+                DifferencesStore.unselectRow(rowIdx);
+            } else {
+                DifferencesStore.selectRow(rowIdx);
+            }
+        }
 
         return (
             <div className={cn(styles['main'], ...classNames)}>
@@ -25,8 +32,11 @@ export const Main = observer(
                             <Table
                                 rows={DifferencesStore.differences}
                                 columns={Object.keys(DifferencesStore.differences[0])}
+                                withChecker={true}
+                                onCheck={switchChecker}
                             />
                             <Button>
+                                Выгрузить
                             </Button>
                         </> :
                         null

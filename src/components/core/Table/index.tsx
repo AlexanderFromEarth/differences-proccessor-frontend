@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler} from 'react';
+import React from 'react';
 import cn from 'classnames';
 import styles from './styles.scss';
 
@@ -11,9 +11,10 @@ export const Table = (
         classNames = []
     }: {
         columns: string[],
-        rows: { [_: string]: string }[],
+        rows: { [_: string]: string | null }[],
+        placeholder?: string,
         withChecker?: boolean,
-        onCheck?: ChangeEventHandler,
+        onCheck?: (rowIdx: number) => void,
         classNames?: string[]
     }
 ) =>
@@ -30,25 +31,25 @@ export const Table = (
         <tbody>
         {
             rows.map(
-                (row) => (
-                    <tr className={cn(styles['table__row'])}>
-                        <td className={cn(styles['table__cell'])}>
-                            {
-                                withChecker && (
+                (row, rowIdx) => (
+                    <tr key={rowIdx} className={cn(styles['table__row'])}>
+                        {
+                            withChecker && (
+                                <td className={cn(styles['table__cell'])}>
                                     <input
                                         type="checkbox"
                                         className={cn(styles['table__checker'])}
-                                        onChange={onCheck}
+                                        onChange={() => onCheck && onCheck(rowIdx)}
                                     />
-                                )
-                            }
-                        </td>
+                                </td>
+                            )
+                        }
                         {
                             Object
                                 .values(row)
                                 .map(
-                                    (value, idx) =>
-                                        <td key={idx} className={cn(styles['table__cell'])}>
+                                    (value, colIdx) =>
+                                        <td key={colIdx} className={cn(styles['table__cell'])}>
                                             {value}
                                         </td>
                                 )

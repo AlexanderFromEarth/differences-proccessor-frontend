@@ -10,7 +10,7 @@ export const Button = (
         classNames = []
     }: {
         onClick?: MouseEventHandler,
-        children?: ReactNode[],
+        children?: ReactNode[] | string | ReactNode,
         isPrimary?: boolean,
         classNames?: string[]
     }
