@@ -1,0 +1,33 @@
+.button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.button_primary {
+  background: #60C2AA;
+  color: #FFFFFF;
+}
+
+.button_primary:hover {
+  background: #3BA189;
+  color: #FFFFFF;
+}
+
+.button_secondary {
+  background: #F7F7F7;
+}
+
+.button_secondary:hover {
+  background: #DCDCDF;
+}
+
+.button:disabled {
+  opacity: 0.3;
+}

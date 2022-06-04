@@ -1,5 +1,5 @@
 export class DifferencesApi {
-    async upload(file: File) {
+    async upload(file: File): Promise<Difference[]> {
         const data = new FormData();
         data.append('file', file);
 
@@ -59,6 +59,16 @@ export class DifferencesApi {
                 temporaryAmount: temporary.amount,
                 hasDifference: !hasDifference ? '' : null
             })
+        );
+    }
+
+    async download(differences: Difference[]) {
+        await fetch(
+            '/api/differences/export',
+            {
+                method: 'POST',
+                body: JSON.stringify(differences)
+            }
         );
     }
 }

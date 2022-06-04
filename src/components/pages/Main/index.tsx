@@ -21,10 +21,13 @@ export const Main = observer(
             } else {
                 DifferencesStore.selectRow(rowIdx);
             }
-        }
+        };
+        const downloadFile = () => {
+            DifferencesStore.download();
+        };
 
         return (
-            <div className={cn(styles['main'], ...classNames)}>
+            <main className={cn(styles['main'], ...classNames)}>
                 <FileInput onChange={uploadFile}/>
                 {
                     DifferencesStore.differences.length ?
@@ -35,13 +38,13 @@ export const Main = observer(
                                 withChecker={true}
                                 onCheck={switchChecker}
                             />
-                            <Button>
+                            <Button onClick={downloadFile}>
                                 Выгрузить
                             </Button>
                         </> :
                         null
                 }
-            </div>
+            </main>
         );
     }
 );

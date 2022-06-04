@@ -2,19 +2,7 @@ import {makeAutoObservable} from 'mobx';
 import {DifferencesApi} from '../api/DifferencesApi';
 
 export class DifferencesStore {
-    differences: {
-        previousName: string | null,
-        previousCode: string | null,
-        previousAmount: string | null,
-        currentName: string | null,
-        currentCode: string | null,
-        currentAmount: string | null,
-        budgetCode: string | null,
-        budgetAmount: string | null,
-        temporaryCode: string | null,
-        temporaryAmount: string | null,
-        hasDifference: string | null
-    }[] = [];
+    differences: Difference[] = [];
     selectedRows: number[] = [];
 
     constructor() {
@@ -23,6 +11,17 @@ export class DifferencesStore {
 
     *upload(file: File) {
         this.differences = yield new DifferencesApi().upload(file)
+        this.selectedRows = [];
+    }
+
+    *download() {
+        if (!this.differences.length || !this.selectedRows.length) {
+            return;
+        }
+
+        yield new DifferencesApi().download(this.differences);
+
+        this.differences = [];
         this.selectedRows = [];
     }
 
