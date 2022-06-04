@@ -22,6 +22,11 @@ export const Table = (
         <thead>
         <tr className={cn(styles['table__row'])}>
             {
+                withChecker && (
+                    <th className={cn(styles['table__cell'])}></th>
+                )
+            }
+            {
                 columns.map(
                     (column, idx) => <th key={idx} className={cn(styles['table__cell'])}>{column}</th>
                 )
