@@ -15,13 +15,6 @@ export const Main = observer(
                 DifferencesStore.upload(e.target.files[0]);
             }
         };
-        const switchChecker = (rowIdx: number) => {
-            if (DifferencesStore.selectedRows.find((selectedRow) => selectedRow === rowIdx)) {
-                DifferencesStore.unselectRow(rowIdx);
-            } else {
-                DifferencesStore.selectRow(rowIdx);
-            }
-        };
         const downloadFile = () => {
             DifferencesStore.download();
         };
@@ -30,13 +23,14 @@ export const Main = observer(
             <main className={cn(styles['main'], ...classNames)}>
                 <FileInput onChange={uploadFile}/>
                 {
-                    DifferencesStore.differences.length ?
+                    DifferencesStore.differences ?
                         <>
                             <Table
-                                rows={DifferencesStore.differences}
-                                columns={Object.keys(DifferencesStore.differences[0])}
+                                rows={DifferencesStore.differencesView}
+                                columns={DifferencesStore.differencesViewColumns}
+                                onCheck={DifferencesStore.switchRow}
                                 withChecker={true}
-                                onCheck={switchChecker}
+                                placeholder="X"
                             />
                             <Button onClick={downloadFile}>
                                 Выгрузить

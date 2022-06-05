@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx';
 import {DifferencesApi} from '../api/DifferencesApi';
 
 export class DifferencesStore {
-    differences: Difference[] = [];
+    differences?: Differences;
     selectedRows: number[] = [];
 
     constructor() {
@@ -15,21 +15,63 @@ export class DifferencesStore {
     }
 
     *download() {
-        if (!this.differences.length || !this.selectedRows.length) {
+        if (!this.differences) {
             return;
         }
 
-        yield new DifferencesApi().download(this.differences);
+        yield new DifferencesApi().download(
+            {
+                ...this.differences,
+                rows: this.differences.rows.filter(({id}) => this.selectedRows.includes(id))
+            }
+        );
 
-        this.differences = [];
+        this.differences = undefined;
         this.selectedRows = [];
     }
 
-    selectRow(rowIdx: number) {
-        this.selectedRows = [...this.selectedRows, rowIdx];
+    switchRow(rowIdx: number) {
+        if (this.selectedRows.find((selectedRow) => selectedRow === rowIdx)) {
+            this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow !== rowIdx);
+        } else {
+            this.selectedRows = [...this.selectedRows, rowIdx];
+        }
     }
 
-    unselectRow(rowIdx: number) {
-        this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow !== rowIdx);
+    get differencesView(): DifferenceView[] {
+        if (!this.differences) {
+            return [];
+        }
+
+        return this.differences?.rows.map((difference) => ({
+            id: difference.id,
+            previousName: difference.previous.name,
+            previousCode: difference.previous.code,
+            previousAmount: difference.previous.amount,
+            currentName: difference.current.name,
+            currentCode: difference.current.code,
+            currentAmount: difference.current.amount,
+            budgetCode: difference.budget.code,
+            budgetAmount: difference.budget.amount,
+            temporaryCode: difference.temporary.code,
+            temporaryAmount: difference.temporary.amount,
+            hasDifference: difference.hasDifference ? null : ''
+        }));
+    }
+
+    get differencesViewColumns(): string[] {
+        return [
+            'previousName',
+            'previousCode',
+            'previousAmount',
+            'currentName',
+            'currentCode',
+            'currentAmount',
+            'budgetCode',
+            'budgetAmount',
+            'temporaryCode',
+            'temporaryAmount',
+            'hasDifference'
+        ];
     }
 }

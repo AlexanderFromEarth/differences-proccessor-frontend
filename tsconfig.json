@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
+    "target": "ES5",
     "jsx": "react"
   },
   "include": [

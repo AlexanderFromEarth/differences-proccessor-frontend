@@ -8,10 +8,11 @@ export const Table = (
         rows,
         withChecker = false,
         onCheck,
+        placeholder = '',
         classNames = []
     }: {
         columns: string[],
-        rows: { [_: string]: string | null }[],
+        rows: { id: number, [_: string]: boolean | number | string | null }[],
         placeholder?: string,
         withChecker?: boolean,
         onCheck?: (rowIdx: number) => void,
@@ -28,7 +29,7 @@ export const Table = (
             }
             {
                 columns.map(
-                    (column, idx) => <th key={idx} className={cn(styles['table__cell'])}>{column}</th>
+                    (column) => <th key={column} className={cn(styles['table__cell'])}>{column}</th>
                 )
             }
         </tr>
@@ -36,26 +37,25 @@ export const Table = (
         <tbody>
         {
             rows.map(
-                (row, rowIdx) => (
-                    <tr key={rowIdx} className={cn(styles['table__row'])}>
+                (row) => (
+                    <tr key={row.id} className={cn(styles['table__row'])}>
                         {
                             withChecker && (
                                 <td className={cn(styles['table__cell'])}>
                                     <input
                                         type="checkbox"
                                         className={cn(styles['table__checker'])}
-                                        onChange={() => onCheck && onCheck(rowIdx)}
+                                        onChange={() => onCheck && onCheck(row.id)}
                                     />
                                 </td>
                             )
                         }
                         {
-                            Object
-                                .values(row)
+                            columns
                                 .map(
-                                    (value, colIdx) =>
-                                        <td key={colIdx} className={cn(styles['table__cell'])}>
-                                            {value}
+                                    (key) =>
+                                        <td key={key} className={cn(styles['table__cell'])}>
+                                            {row[key] || placeholder}
                                         </td>
                                 )
                         }

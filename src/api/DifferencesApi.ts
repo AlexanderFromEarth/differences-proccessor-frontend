@@ -1,5 +1,5 @@
 export class DifferencesApi {
-    async upload(file: File): Promise<Difference[]> {
+    async upload(file: File): Promise<Differences> {
         const data = new FormData();
         data.append('file', file);
 
@@ -15,58 +15,17 @@ export class DifferencesApi {
             throw new Error(await response.text());
         }
 
-        const body: {
-            previous: {
-                name: string | null,
-                code: string | null,
-                amount: string | null,
-            },
-            current: {
-                name: string | null,
-                code: string | null,
-                amount: string | null,
-            },
-            budget: {
-                code: string | null,
-                amount: string | null,
-            },
-            temporary: {
-                code: string | null,
-                amount: string | null,
-            },
-            hasDifference: boolean
-        }[] = await response.json();
-
-        return body.map(
-            (
-                {
-                    previous,
-                    current,
-                    budget,
-                    temporary,
-                    hasDifference
-                }
-            ) => ({
-                previousName: previous.name,
-                previousCode: previous.code,
-                previousAmount: previous.amount,
-                currentName: current.name,
-                currentCode: current.code,
-                currentAmount: current.amount,
-                budgetCode: budget.code,
-                budgetAmount: budget.amount,
-                temporaryCode: temporary.code,
-                temporaryAmount: temporary.amount,
-                hasDifference: !hasDifference ? '' : null
-            })
-        );
+        return response.json();
     }
 
-    async download(differences: Difference[]) {
+    async download(differences: Differences) {
         await fetch(
             '/api/differences/export',
             {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(differences)
             }
         );
