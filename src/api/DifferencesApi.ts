@@ -20,9 +20,9 @@ export class DifferencesApi {
 
     async download(differences: Differences) {
         await fetch(
-            '/api/differences/export',
+            '/api/differences',
             {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
