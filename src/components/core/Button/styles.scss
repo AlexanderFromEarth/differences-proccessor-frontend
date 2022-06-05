@@ -8,26 +8,26 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-}
 
-.button_primary {
-  background: #60C2AA;
-  color: #FFFFFF;
-}
+  &_primary {
+    background: #60C2AA;
+    color: #FFFFFF;
 
-.button_primary:hover {
-  background: #3BA189;
-  color: #FFFFFF;
-}
+    &:hover {
+      background: #3BA189;
+      color: #FFFFFF;
+    }
+  }
 
-.button_secondary {
-  background: #F7F7F7;
-}
+  &_secondary {
+    background: #F7F7F7;
 
-.button_secondary:hover {
-  background: #DCDCDF;
-}
+    &:hover {
+      background: #DCDCDF;
+    }
+  }
 
-.button:disabled {
-  opacity: 0.3;
+  &:disabled {
+    opacity: 0.3;
+  }
 }
