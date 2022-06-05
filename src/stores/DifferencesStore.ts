@@ -1,8 +1,9 @@
 import {makeAutoObservable} from 'mobx';
+import {saveAs} from 'file-saver';
 import {DifferencesApi} from '../api/DifferencesApi';
 
 export class DifferencesStore {
-    differences?: Differences;
+    differences?: Differences = undefined;
     selectedRows: number[] = [];
 
     constructor() {
@@ -10,28 +11,30 @@ export class DifferencesStore {
     }
 
     *upload(file: File) {
-        this.differences = yield new DifferencesApi().upload(file)
+        this.differences = yield new DifferencesApi().upload(file);
         this.selectedRows = [];
     }
 
     *download() {
-        if (!this.differences) {
+        if(!this.differences) {
             return;
         }
 
-        yield new DifferencesApi().download(
+        const {blob, filename} = yield new DifferencesApi().download(
             {
                 ...this.differences,
                 rows: this.differences.rows.filter(({id}) => this.selectedRows.includes(id))
             }
         );
 
+        saveAs(blob, filename || 'result');
+
         this.differences = undefined;
         this.selectedRows = [];
     }
 
     switchRow(rowIdx: number) {
-        if (this.selectedRows.find((selectedRow) => selectedRow === rowIdx)) {
+        if(this.selectedRows.find((selectedRow) => selectedRow === rowIdx)) {
             this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow !== rowIdx);
         } else {
             this.selectedRows = [...this.selectedRows, rowIdx];
@@ -39,7 +42,7 @@ export class DifferencesStore {
     }
 
     get differencesView(): DifferenceView[] {
-        if (!this.differences) {
+        if(!this.differences) {
             return [];
         }
 

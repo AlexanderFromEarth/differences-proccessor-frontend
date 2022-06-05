@@ -4,7 +4,7 @@ export class DifferencesApi {
         data.append('file', file);
 
         const response = await fetch(
-            '/api/differences',
+            '/api/differences/upload',
             {
                 method: 'POST',
                 body: data
@@ -18,16 +18,27 @@ export class DifferencesApi {
         return response.json();
     }
 
-    async download(differences: Differences) {
-        await fetch(
-            '/api/differences',
+    async download(differences: Differences): Promise<{blob: Blob, filename: string}> {
+        const response = await fetch(
+            '/api/differences/download',
             {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(differences)
             }
         );
+
+        if(response.status >= 400) {
+            throw new Error(await response.text());
+        }
+
+        const filename = response.headers.get('Content-Disposition')?.match(/filename\*=UTF-8''([\w%\-.]+)(?:; ?|$)/i);
+
+        return {
+            blob: await response.blob(),
+            filename: filename && filename[1] ? filename[1] : ''
+        };
     }
 }

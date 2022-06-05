@@ -15,6 +15,7 @@ declare type DifferenceView = {
 
 declare type Differences = {
     fileHash: string,
+    fileType: string,
     systemRows: number[],
     rows: {
         id: number,

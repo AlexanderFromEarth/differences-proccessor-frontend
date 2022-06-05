@@ -15,6 +15,9 @@ export const Main = observer(
                 DifferencesStore.upload(e.target.files[0]);
             }
         };
+        const onCheck = (rowIdx: number) => {
+            DifferencesStore.switchRow(rowIdx);
+        };
         const downloadFile = () => {
             DifferencesStore.download();
         };
@@ -28,7 +31,7 @@ export const Main = observer(
                             <Table
                                 rows={DifferencesStore.differencesView}
                                 columns={DifferencesStore.differencesViewColumns}
-                                onCheck={DifferencesStore.switchRow}
+                                onCheck={onCheck}
                                 withChecker={true}
                                 placeholder="X"
                             />
